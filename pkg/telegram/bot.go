@@ -3,6 +3,7 @@ package telegram
 import (
 	"log"
 
+	"github.com/TimNikolaev/Pocketoid/pkg/repository"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/zhashkevych/go-pocket-sdk"
 )
@@ -10,13 +11,15 @@ import (
 type Bot struct {
 	bot          *tgbotapi.BotAPI
 	pocketClient *pocket.Client
+	repository   repository.Repository
 	redirectURL  string
 }
 
-func NewBot(bot *tgbotapi.BotAPI, pocketClient *pocket.Client, redirectURL string) *Bot {
+func NewBot(bot *tgbotapi.BotAPI, pocketClient *pocket.Client, repository repository.Repository, redirectURL string) *Bot {
 	return &Bot{
 		bot:          bot,
 		pocketClient: pocketClient,
+		repository:   repository,
 		redirectURL:  redirectURL,
 	}
 }
