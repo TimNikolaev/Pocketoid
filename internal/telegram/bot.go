@@ -3,7 +3,7 @@ package telegram
 import (
 	"log"
 
-	"github.com/TimNikolaev/Pocketoid/pkg/repository"
+	"github.com/TimNikolaev/Pocketoid/internal/repository"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/zhashkevych/go-pocket-sdk"
 )

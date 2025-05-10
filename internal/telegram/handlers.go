@@ -1,7 +1,6 @@
 package telegram
 
 import (
-	"fmt"
 	"log"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
@@ -29,19 +28,20 @@ func (b *Bot) handleMessage(message *tgbotapi.Message) {
 }
 
 func (b *Bot) handleStartCmd(message *tgbotapi.Message) error {
-	authLink, err := b.generateAuthorizationLink(message.Chat.ID)
+	_, err := b.getAccessToken(message.Chat.ID)
 	if err != nil {
-		return err
+		return b.initAuthorizationProcess(message)
 	}
 
-	msg := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprintf(replyStartTemplate, authLink))
+	msg := tgbotapi.NewMessage(message.Chat.ID, replyAlreadyAuthorized)
 
 	_, err = b.bot.Send(msg)
+
 	return err
 }
 
 func (b *Bot) handleUnknownCmd(message *tgbotapi.Message) error {
-	msg := tgbotapi.NewMessage(message.Chat.ID, "Я не знаю такой комманды 🧐")
+	msg := tgbotapi.NewMessage(message.Chat.ID, unknownCmd)
 
 	_, err := b.bot.Send(msg)
 	return err

@@ -1,10 +1,10 @@
-package bolt_repository
+package boltdb
 
 import (
 	"errors"
 	"strconv"
 
-	"github.com/TimNikolaev/Pocketoid/pkg/repository"
+	"github.com/TimNikolaev/Pocketoid/internal/repository"
 	"github.com/boltdb/bolt"
 )
 

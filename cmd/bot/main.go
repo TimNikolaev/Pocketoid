@@ -4,8 +4,9 @@ import (
 	"log"
 
 	"github.com/TimNikolaev/Pocketoid/configs"
-	bolt_repository "github.com/TimNikolaev/Pocketoid/pkg/repository/bolt"
-	"github.com/TimNikolaev/Pocketoid/pkg/telegram"
+	"github.com/TimNikolaev/Pocketoid/internal/repository/boltdb"
+	"github.com/TimNikolaev/Pocketoid/internal/server"
+	"github.com/TimNikolaev/Pocketoid/internal/telegram"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/zhashkevych/go-pocket-sdk"
 )
@@ -28,14 +29,22 @@ func main() {
 		log.Fatal(err)
 	}
 
-	boltRepository, err := bolt_repository.NewRepository()
+	boltRepository, err := boltdb.NewRepository()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	tgBot := telegram.NewBot(bot, pocketClient, boltRepository, "http://localhost/")
+	tgBot := telegram.NewBot(bot, pocketClient, boltRepository, "http://localhost:8888/")
 
-	if err := tgBot.Start(); err != nil {
+	authServer := server.NewAuthorizationServer(pocketClient, boltRepository, "https://t.me/PocketoidBot")
+
+	go func() {
+		if err := tgBot.Start(); err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	if err = authServer.Start(); err != nil {
 		log.Fatal(err)
 	}
 }
