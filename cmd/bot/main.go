@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/TimNikolaev/Pocketoid/configs"
@@ -12,10 +13,12 @@ import (
 )
 
 func main() {
-	config, err := configs.LoadConfig()
+	config, err := configs.InitConfig()
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Println(config)
 
 	bot, err := tgbotapi.NewBotAPI(config.TgToken)
 	if err != nil {
@@ -29,14 +32,14 @@ func main() {
 		log.Fatal(err)
 	}
 
-	boltRepository, err := boltdb.NewRepository()
+	boltRepository, err := boltdb.NewRepository(config.BDPath)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	tgBot := telegram.NewBot(bot, pocketClient, boltRepository, "http://localhost:8888/")
+	tgBot := telegram.NewBot(bot, pocketClient, boltRepository, config.AuthServerURL)
 
-	authServer := server.NewAuthorizationServer(pocketClient, boltRepository, "https://t.me/PocketoidBot")
+	authServer := server.NewAuthorizationServer(pocketClient, boltRepository, config.TgBotURL)
 
 	go func() {
 		if err := tgBot.Start(); err != nil {

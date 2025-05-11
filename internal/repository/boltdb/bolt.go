@@ -12,8 +12,8 @@ type Repository struct {
 	db *bolt.DB
 }
 
-func NewRepository() (*Repository, error) {
-	db, err := bolt.Open("bot.db", 0600, nil)
+func NewRepository(path string) (*Repository, error) {
+	db, err := bolt.Open(path, 0600, nil)
 	if err != nil {
 		return nil, err
 	}
