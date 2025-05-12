@@ -1,4 +1,4 @@
-package configs
+package config
 
 import (
 	"os"
@@ -38,7 +38,7 @@ type Errors struct {
 
 func InitConfig() (*Config, error) {
 	viper.AddConfigPath("configs")
-	viper.SetConfigName("configs")
+	viper.SetConfigName("config")
 
 	if err := viper.ReadInConfig(); err != nil {
 		return nil, err
@@ -58,7 +58,7 @@ func InitConfig() (*Config, error) {
 		return nil, err
 	}
 
-	if err := loadEnv(&cfg); err != nil {
+	if err := parseEnv(&cfg); err != nil {
 		return nil, err
 	}
 

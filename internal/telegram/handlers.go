@@ -40,7 +40,7 @@ func (b *Bot) handleMessage(message *tgbotapi.Message) error {
 		return errFailToSave
 	}
 
-	msg := tgbotapi.NewMessage(message.Chat.ID, replySuccessSave)
+	msg := tgbotapi.NewMessage(message.Chat.ID, b.messages.SuccessSave)
 	_, err = b.bot.Send(msg)
 	return err
 }
@@ -51,7 +51,7 @@ func (b *Bot) handleStartCmd(message *tgbotapi.Message) error {
 		return b.initAuthorizationProcess(message)
 	}
 
-	msg := tgbotapi.NewMessage(message.Chat.ID, replyAlreadyAuthorized)
+	msg := tgbotapi.NewMessage(message.Chat.ID, b.messages.AlreadyAuthorized)
 
 	_, err = b.bot.Send(msg)
 
@@ -59,7 +59,7 @@ func (b *Bot) handleStartCmd(message *tgbotapi.Message) error {
 }
 
 func (b *Bot) handleUnknownCmd(message *tgbotapi.Message) error {
-	msg := tgbotapi.NewMessage(message.Chat.ID, replyUnknownCmd)
+	msg := tgbotapi.NewMessage(message.Chat.ID, b.messages.UnknownCommand)
 
 	_, err := b.bot.Send(msg)
 	return err

@@ -1,10 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
-	"github.com/TimNikolaev/Pocketoid/configs"
+	"github.com/TimNikolaev/Pocketoid/internal/config"
 	"github.com/TimNikolaev/Pocketoid/internal/repository/boltdb"
 	"github.com/TimNikolaev/Pocketoid/internal/server"
 	"github.com/TimNikolaev/Pocketoid/internal/telegram"
@@ -13,33 +12,31 @@ import (
 )
 
 func main() {
-	config, err := configs.InitConfig()
+	cfg, err := config.InitConfig()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println(config)
-
-	bot, err := tgbotapi.NewBotAPI(config.TgToken)
+	bot, err := tgbotapi.NewBotAPI(cfg.TgToken)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	bot.Debug = true
 
-	pocketClient, err := pocket.NewClient(config.ConsumerKey)
+	pocketClient, err := pocket.NewClient(cfg.ConsumerKey)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	boltRepository, err := boltdb.NewRepository(config.BDPath)
+	boltRepository, err := boltdb.NewRepository(cfg.BDPath)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	tgBot := telegram.NewBot(bot, pocketClient, boltRepository, config.AuthServerURL)
+	tgBot := telegram.NewBot(bot, pocketClient, boltRepository, cfg.AuthServerURL, cfg.Messages)
 
-	authServer := server.NewAuthorizationServer(pocketClient, boltRepository, config.TgBotURL)
+	authServer := server.NewAuthorizationServer(pocketClient, boltRepository, cfg.TgBotURL)
 
 	go func() {
 		if err := tgBot.Start(); err != nil {
